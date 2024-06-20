@@ -1,6 +1,3 @@
-Here is the updated `README.md` with the new configuration option `generator_default`:
-
-```markdown
 # SkylliaOre Generator Plugin
 
 This plugin manages custom block generators for SkyBlock islands, with support for Oraxen.
