@@ -6,6 +6,8 @@ import fr.euphyllia.skylliaore.Main;
 import fr.euphyllia.skylliaore.api.Generator;
 import fr.euphyllia.skylliaore.config.DefaultConfig;
 import fr.euphyllia.skylliaore.database.MariaDBInit;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -36,23 +38,29 @@ public class OreCommands implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length < 2) {
-            sender.sendMessage("Usage: /<command> <player> <generator>");
+            sender.sendMessage(Component.text("Usage: /<command> <player> <generator>").color(NamedTextColor.RED));
             return false;
         }
 
         Bukkit.getAsyncScheduler().runNow(Main.getPlugin(Main.class), task -> {
             OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(args[0]);
             CompletableFuture<@Nullable Island> future = SkylliaAPI.getIslandByPlayerId(offPlayer.getUniqueId());
-            if (future == null) return;
+            if (future == null) {
+                sender.sendMessage(Component.text("No island found.").color(NamedTextColor.RED));
+                return;
+            }
             Island island = future.join();
-            if (island == null) return;
+            if (island == null) {
+                sender.sendMessage(Component.text("No island found.").color(NamedTextColor.RED));
+                return;
+            }
 
             String nameGenerator = args[1];
             CompletableFuture<Boolean> updateFuture = MariaDBInit.getMariaDbGenerator().updateGenIsland(island.getId(), nameGenerator);
             if (updateFuture.join()) {
-                sender.sendMessage("Générateur changé avec succès.");
+                sender.sendMessage(Component.text("Generator changed successfully.").color(NamedTextColor.GREEN));
             } else {
-                sender.sendMessage("Une erreur est survenue lors du changement de générateur.");
+                sender.sendMessage(Component.text("An error occurred while changing the generator.").color(NamedTextColor.RED));
             }
         });
 
