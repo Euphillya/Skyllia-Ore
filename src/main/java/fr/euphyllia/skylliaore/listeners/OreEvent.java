@@ -4,6 +4,7 @@ import fr.euphyllia.skyllia.api.SkylliaAPI;
 import fr.euphyllia.skyllia.api.skyblock.Island;
 import fr.euphyllia.skylliaore.Main;
 import fr.euphyllia.skylliaore.api.Generator;
+import io.th0rgal.oraxen.api.OraxenBlocks;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -11,11 +12,15 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFormEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.Random;
 
 public class OreEvent implements Listener {
+
+    private static final Logger log = LoggerFactory.getLogger(OreEvent.class);
 
     @EventHandler
     public void onBlockForm(final BlockFormEvent event) {
@@ -49,15 +54,27 @@ public class OreEvent implements Listener {
         }
     }
 
-    private BlockData getBlockByChance(Map<BlockData, Double> blockChances) {
+    private BlockData getBlockByChance(Map<String, Double> blockChances) {
         double totalChance = blockChances.values().stream().mapToDouble(i -> i).sum();
         double randomChance = new Random().nextDouble() * totalChance;
 
         double currentChance = 0;
-        for (Map.Entry<BlockData, Double> entry : blockChances.entrySet()) {
+        for (Map.Entry<String, Double> entry : blockChances.entrySet()) {
             currentChance += entry.getValue();
             if (randomChance < currentChance) {
-                return entry.getKey();
+                try {
+                    if (entry.getKey().startsWith("oraxen:") && Main.isOraxenLoaded()) {
+                        String oraxenBlock = entry.getKey().split(":")[1];
+                        BlockData data = OraxenBlocks.getOraxenBlockData(oraxenBlock);
+                        if (data == null) continue;
+                        return data;
+                    } else {
+                        return Material.valueOf(entry.getKey().toUpperCase()).createBlockData();
+                    }
+                } catch (Exception exception) {
+                    log.error("{} is not a block Minecraft or Oraxen", entry.getKey());
+                    return Material.COBBLESTONE.createBlockData();
+                }
             }
         }
         return Material.COBBLESTONE.createBlockData(); // Default block if no match is found

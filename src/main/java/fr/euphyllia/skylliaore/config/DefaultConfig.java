@@ -1,10 +1,6 @@
 package fr.euphyllia.skylliaore.config;
 
 import fr.euphyllia.skylliaore.api.Generator;
-import io.th0rgal.oraxen.api.OraxenBlocks;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
@@ -28,25 +24,11 @@ public class DefaultConfig {
             List<String> worlds = (List<String>) genData.get("world");
             List<Map<?, ?>> blockByChance = (List<Map<?, ?>>) genData.get("block_chance");
 
-            Map<BlockData, Double> blockChances = new HashMap<>();
+            Map<String, Double> blockChances = new HashMap<>();
             for (Map<?, ?> blockData : blockByChance) {
                 String blockMaterial = (String) blockData.get("block");
-                BlockData block;
-                if (blockMaterial.startsWith("oraxen:")) {
-                    if (Bukkit.getPluginManager().isPluginEnabled("Oraxen")) {
-                        String oraxenBlock = blockMaterial.split(":")[1];
-                        BlockData data = OraxenBlocks.getOraxenBlockData(oraxenBlock);
-                        if (data == null) continue;
-                        block = data;
-                    } else {
-                        block = Material.STONE.createBlockData();
-                    }
-                } else {
-
-                    block = Material.valueOf(blockMaterial.toUpperCase()).createBlockData();
-                }
                 double chance = Double.parseDouble(String.valueOf(blockData.get("chance")));
-                blockChances.put(block, chance);
+                blockChances.put(blockMaterial, chance);
             }
 
             generators.put(name, new Generator(name, replaceBlocks, worlds, blockChances));
@@ -61,6 +43,6 @@ public class DefaultConfig {
         return getGenerators().getOrDefault(defaultGenerator, new Generator("null",
                 List.of("COBBLESTONE"),
                 List.of("sky-overworld"),
-                Map.of(Material.COBBLESTONE.createBlockData(), 100.0)));
+                Map.of("cobblestone", 100.0)));
     }
 }

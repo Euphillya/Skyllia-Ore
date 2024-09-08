@@ -7,6 +7,7 @@ import fr.euphyllia.skylliaore.database.MariaDBInit;
 import fr.euphyllia.skylliaore.listeners.OreEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ public final class Main extends JavaPlugin {
     private static final Logger logger = LogManager.getLogger(Main.class);
     private static DefaultConfig config;
     private static Cache cache;
+    private static boolean oraxenLoaded = false;
 
     @NotNull
     public static DefaultConfig getDefaultConfig() {
@@ -26,8 +28,13 @@ public final class Main extends JavaPlugin {
         return cache;
     }
 
+    public static boolean isOraxenLoaded() {
+        return oraxenLoaded;
+    }
+
     @Override
     public void onEnable() {
+        oraxenLoaded = Bukkit.getPluginManager().isPluginEnabled("Oraxen");
         // Plugin startup logic
         initializeConfig();
         initializeDatabase();

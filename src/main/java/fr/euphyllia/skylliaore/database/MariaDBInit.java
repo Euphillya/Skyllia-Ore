@@ -28,6 +28,14 @@ public class MariaDBInit extends DatabaseInitializeQuery {
         initializeGenerator();
     }
 
+    public static DatabaseLoader getPool() {
+        return database;
+    }
+
+    public static MariaDBGenerator getMariaDbGenerator() {
+        return mariaDbGenerator;
+    }
+
     private void initializeDatabase() {
         MariaDB mariaDB = new MariaDB(ConfigToml.mariaDBConfig);
         database = new DatabaseLoader(mariaDB);
@@ -35,14 +43,6 @@ public class MariaDBInit extends DatabaseInitializeQuery {
 
     private void initializeGenerator() {
         mariaDbGenerator = new MariaDBGenerator();
-    }
-
-    public static DatabaseLoader getPool() {
-        return database;
-    }
-
-    public static MariaDBGenerator getMariaDbGenerator() {
-        return mariaDbGenerator;
     }
 
     @Override
