@@ -27,7 +27,7 @@ public class MariaDBGenerator {
             INSERT INTO `%s`.`generators`
             (`island_id`, `generator_id`)
             VALUES(?, ?)
-            ON DUPLICATE KEY UPDATE `generator_id` = VALUES(`generator_id`);
+            ON DUPLICATE KEY UPDATE `island_id` = VALUES(`island_id`);
             """;
 
     private final String databaseName;
