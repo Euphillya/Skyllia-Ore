@@ -42,14 +42,9 @@ public class OreCommands implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        Bukkit.getAsyncScheduler().runNow(Main.getPlugin(Main.class), task -> {
+        Thread.startVirtualThread(() -> {
             OfflinePlayer offPlayer = Bukkit.getOfflinePlayer(args[0]);
-            CompletableFuture<@Nullable Island> future = SkylliaAPI.getIslandByPlayerId(offPlayer.getUniqueId());
-            if (future == null) {
-                sender.sendMessage(Component.text("No island found.").color(NamedTextColor.RED));
-                return;
-            }
-            Island island = future.join();
+            @Nullable Island island = SkylliaAPI.getCacheIslandByPlayerId(offPlayer.getUniqueId());
             if (island == null) {
                 sender.sendMessage(Component.text("No island found.").color(NamedTextColor.RED));
                 return;
@@ -87,7 +82,6 @@ public class OreCommands implements CommandExecutor, TabCompleter {
                     .map(Player::getName)
                     .collect(Collectors.toList());
         } else if (args.length == 2) {
-            Main.getPlugin(Main.class);
             DefaultConfig config = Main.getDefaultConfig();
             Map<String, Generator> generators = config.getGenerators();
             return new ArrayList<>(generators.keySet());

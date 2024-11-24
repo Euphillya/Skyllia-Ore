@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'fr.euphyllia'
-version = '1.0.2'
+version = '1.0.3'
 
 repositories {
     mavenCentral()
@@ -22,9 +22,9 @@ repositories {
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT"
-    compileOnly files('./libs/Skyllia-1.0-50-all.jar')
+    compileOnly files('./libs/Skyllia-1.0-null-all.jar')
     compileOnly files('./libs/oraxen-2.0-SNAPSHOT.jar')
-    compileOnly "com.google.guava:guava:33.2.0-jre"
+    compileOnly "com.google.guava:guava:33.3.1-jre"
 }
 
 def targetJavaVersion = 21
