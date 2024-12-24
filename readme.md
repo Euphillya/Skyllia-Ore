@@ -1,4 +1,4 @@
-# ARCHIVED ! See : https://github.com/Euphillya/Skyllia
+# ARCHIVED ! See : https://github.com/Euphillya/Skyllia/tree/dev/addons/OreGenerator
 
 # SkylliaOre Generator Plugin
 
