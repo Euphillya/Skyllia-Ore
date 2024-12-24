@@ -1,3 +1,5 @@
+# ARCHIVED ! See : https://github.com/Euphillya/Skyllia
+
 # SkylliaOre Generator Plugin
 
 This plugin manages custom block generators for SkyBlock islands, with support for Oraxen.
